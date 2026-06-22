@@ -143,6 +143,7 @@ sam3_logs/
 logs/
 runs/
 tensorboard/
+sam3_detr_exp/outputs/
 
 # OS specific
 .DS_Store
