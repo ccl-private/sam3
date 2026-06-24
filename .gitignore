@@ -144,7 +144,9 @@ logs/
 runs/
 tensorboard/
 lightning_logs/
-sam3_detr_exp/outputs/
+sam3_detr_exp/outputs/*
+!sam3_detr_exp/outputs/detr_text_prompt.png
+!sam3_detr_exp/outputs/detr_text_prompt_lora.png
 
 # OS specific
 .DS_Store
