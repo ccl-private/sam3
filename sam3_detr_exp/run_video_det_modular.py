@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import torch
@@ -54,24 +55,50 @@ def save_module_weights(video_model, out_dir: Path) -> None:
         torch.save(module.state_dict(), path)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Export modular SAM3 detector/tracker weights from a full sam3.pt checkpoint."
+    )
+    parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        default=DEFAULT_CKPT,
+        help=f"Path to the original SAM3 checkpoint. Default: {DEFAULT_CKPT}",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=WEIGHTS_DIR,
+        help=f"Directory to save weights_modular/*.pt. Default: {WEIGHTS_DIR}",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    if not DEFAULT_CKPT.exists():
+    checkpoint_path = args.checkpoint.resolve()
+    output_dir = args.output_dir.resolve()
+
+    if not checkpoint_path.exists():
         raise FileNotFoundError(
-            f"Checkpoint not found: {DEFAULT_CKPT}. Copy sam3.pt into the repo root."
+            "Checkpoint not found: "
+            f"{checkpoint_path}. "
+            "Use --checkpoint /path/to/sam3.pt, or copy sam3.pt into the repo root."
         )
 
     video_model = build_sam3_video_model(
-        checkpoint_path=str(DEFAULT_CKPT),
+        checkpoint_path=str(checkpoint_path),
         load_from_HF=False,
         bpe_path=str(BPE_PATH),
         device=device,
         compile=False,
     )
 
-    save_module_weights(video_model, WEIGHTS_DIR)
-    print("saved:", WEIGHTS_DIR)
+    save_module_weights(video_model, output_dir)
+    print("checkpoint:", checkpoint_path)
+    print("saved:", output_dir)
 
 
 if __name__ == "__main__":

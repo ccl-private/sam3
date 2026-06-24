@@ -45,9 +45,33 @@ pip install -e .
 
 从原始 `sam3.pt` 导出模块化权重，生成 `sam3_detr_exp/weights_modular/*.pt`。
 
+默认行为：
+
+- 默认读取仓库根目录的 `sam3.pt`
+- 默认输出到 `sam3_detr_exp/weights_modular/`
+- 当前会拆成 10 个模块：
+  - `vision_backbone`
+  - `text_encoder`
+  - `transformer_encoder`
+  - `transformer_decoder`
+  - `segmentation_head`
+  - `geometry_encoder`
+  - `dot_product_scoring`
+  - `tracker_sam_heads`
+  - `tracker_maskmem_backbone`
+  - `tracker_transformer`
+
 ```bash
 source /slow_disk/ccl/codes/sam3/.venv/bin/activate
 python sam3_detr_exp/run_video_det_modular.py
+```
+
+如果原始 checkpoint 不在仓库根目录，可以显式指定：
+
+```bash
+python sam3_detr_exp/run_video_det_modular.py \
+  --checkpoint /path/to/sam3.pt \
+  --output-dir sam3_detr_exp/weights_modular
 ```
 
 ### [`sam3_detr_exp/modular_pipeline.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/modular_pipeline.py)
@@ -183,9 +207,9 @@ LoRA 训练代码已经从单文件脚本提炼成分层结构：
 
 ## More Docs
 
-- 模块输入输出、shape、数据流图：
+- 模块拆分总览、10 个模块分别是什么、每个模块的输入输出 shape、完整 detector/tracker 数据流图：
   [`sam3_detr_exp/docs/modular-weights.md`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/docs/modular-weights.md)
-- DETR LoRA 微调方案：
+- DETR LoRA 微调范围、冻结策略、训练入口、保存加载方式：
   [`sam3_detr_exp/docs/detr-lora-finetune.md`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/docs/detr-lora-finetune.md)
 
 ## Recommended Order

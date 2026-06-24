@@ -41,10 +41,39 @@
 
 ### 1. 导出模块权重
 
+默认读取：
+
+- 仓库根目录 `sam3.pt`
+
+默认输出：
+
+- `sam3_detr_exp/weights_modular/*.pt`
+
 ```bash
 source /slow_disk/ccl/codes/sam3/.venv/bin/activate
 python sam3_detr_exp/run_video_det_modular.py
 ```
+
+如果原始 checkpoint 不在仓库根目录，可以显式指定路径：
+
+```bash
+python sam3_detr_exp/run_video_det_modular.py \
+  --checkpoint /path/to/sam3.pt \
+  --output-dir sam3_detr_exp/weights_modular
+```
+
+当前会拆成 10 个模块：
+
+1. `vision_backbone`
+2. `text_encoder`
+3. `transformer_encoder`
+4. `transformer_decoder`
+5. `segmentation_head`
+6. `geometry_encoder`
+7. `dot_product_scoring`
+8. `tracker_sam_heads`
+9. `tracker_maskmem_backbone`
+10. `tracker_transformer`
 
 ### 2. 跑图片对比
 
