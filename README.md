@@ -1,6 +1,6 @@
 # SAM3 DETR Modular and LoRA
 
-这个仓库当前主要整理的是 [`sam3_detr_exp`](/slow_disk/ccl/codes/sam3/sam3_detr_exp) 这条实验主线，目标很直接：
+这个仓库当前主要整理的是 [`sam3_detr_exp`](sam3_detr_exp/) 这条实验主线，目标很直接：
 
 - 把原始 `sam3.pt` 拆成清楚的模块
 - 保持非 JIT、可继续训练、可单独替换模块
@@ -20,7 +20,7 @@
 - TorchVision `0.25.0+cu128`
 - Lightning `2.6.5`
 
-对应依赖已经固化到根目录 [requirements.txt](/slow_disk/ccl/codes/sam3/requirements.txt)。
+对应依赖已经固化到根目录 [requirements.txt](requirements.txt)。
 
 安装方式：
 
@@ -41,7 +41,7 @@ pip install -e .
 
 ## Project Layout
 
-### [`sam3_detr_exp/run_video_det_modular.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/run_video_det_modular.py)
+### [`sam3_detr_exp/run_video_det_modular.py`](sam3_detr_exp/run_video_det_modular.py)
 
 从原始 `sam3.pt` 导出模块化权重，生成 `sam3_detr_exp/weights_modular/*.pt`。
 
@@ -74,7 +74,7 @@ python sam3_detr_exp/run_video_det_modular.py \
   --output-dir sam3_detr_exp/weights_modular
 ```
 
-### [`sam3_detr_exp/modular_pipeline.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/modular_pipeline.py)
+### [`sam3_detr_exp/modular_pipeline.py`](sam3_detr_exp/modular_pipeline.py)
 
 模块化组装核心。负责把各个 `*.pt` 权重重新拼成 detector、tracker 和 video predictor。
 
@@ -87,7 +87,7 @@ python sam3_detr_exp/run_video_det_modular.py \
 - `build_video_model()`
 - `ModularVideoPredictor`
 
-### [`sam3_detr_exp/run_detr_prompt_inference.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/run_detr_prompt_inference.py)
+### [`sam3_detr_exp/run_detr_prompt_inference.py`](sam3_detr_exp/run_detr_prompt_inference.py)
 
 只跑 detector 提示推理，支持文本提示和框提示，也支持加载 LoRA。
 
@@ -123,7 +123,7 @@ python sam3_detr_exp/run_detr_prompt_inference.py \
   --output sam3_detr_exp/outputs/detr_text_prompt_lora.png
 ```
 
-### [`sam3_detr_exp/compare_image_original_vs_modular.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/compare_image_original_vs_modular.py)
+### [`sam3_detr_exp/compare_image_original_vs_modular.py`](sam3_detr_exp/compare_image_original_vs_modular.py)
 
 对比原始 `sam3.pt` 和模块化 detector 在同一张图上的结果。
 
@@ -139,7 +139,7 @@ python sam3_detr_exp/compare_image_original_vs_modular.py \
   --prompt shoe
 ```
 
-### [`sam3_detr_exp/compare_video_original_vs_modular.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/compare_video_original_vs_modular.py)
+### [`sam3_detr_exp/compare_video_original_vs_modular.py`](sam3_detr_exp/compare_video_original_vs_modular.py)
 
 对比原始 `sam3.pt` 和模块化 video pipeline 在同一段视频上的结果。
 
@@ -157,7 +157,7 @@ python sam3_detr_exp/compare_video_original_vs_modular.py \
   --max-frames 2
 ```
 
-### [`sam3_detr_exp/train_detr_lora.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/train_detr_lora.py)
+### [`sam3_detr_exp/train_detr_lora.py`](sam3_detr_exp/train_detr_lora.py)
 
 基于 `lightning==2.6.5` 的 DETR LoRA 微调入口，当前接的是 `/slow_disk/ccl/data/crack_segment` 的 YOLO segmentation 数据。
 
@@ -274,19 +274,19 @@ python sam3_detr_exp/run_detr_prompt_inference.py \
 
 LoRA 训练代码已经从单文件脚本提炼成分层结构：
 
-- [`sam3_detr_exp/model/detr_lora_module.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/model/detr_lora_module.py)
+- [`sam3_detr_exp/model/detr_lora_module.py`](sam3_detr_exp/model/detr_lora_module.py)
   - LightningModule 封装
-- [`sam3_detr_exp/utils/detr_lora_data.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/utils/detr_lora_data.py)
+- [`sam3_detr_exp/utils/detr_lora_data.py`](sam3_detr_exp/utils/detr_lora_data.py)
   - YOLO segmentation dataset 和 datamodule
-- [`sam3_detr_exp/utils/detr_lora_utils.py`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/utils/detr_lora_utils.py)
+- [`sam3_detr_exp/utils/detr_lora_utils.py`](sam3_detr_exp/utils/detr_lora_utils.py)
   - LoRA 挂载、保存加载、target 构造、loss 和 detector 组装
 
 ## More Docs
 
 - 模块拆分总览、10 个模块分别是什么、每个模块的输入输出 shape、完整 detector/tracker 数据流图：
-  [`sam3_detr_exp/docs/modular-weights.md`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/docs/modular-weights.md)
+  [`sam3_detr_exp/docs/modular-weights.md`](sam3_detr_exp/docs/modular-weights.md)
 - DETR LoRA 微调范围、冻结策略、训练入口、保存加载方式、训练数据格式要求：
-  [`sam3_detr_exp/docs/detr-lora-finetune.md`](/slow_disk/ccl/codes/sam3/sam3_detr_exp/docs/detr-lora-finetune.md)
+  [`sam3_detr_exp/docs/detr-lora-finetune.md`](sam3_detr_exp/docs/detr-lora-finetune.md)
 
 ## Recommended Order
 

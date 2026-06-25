@@ -8,7 +8,7 @@
 - 仍然保持和原始 `sam3.pt` 一样的推理结果
 - 后续可以把最小推理 runtime 从主仓库里继续抽离出去
 
-当前模块组装入口在 [modular_pipeline.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/modular_pipeline.py)。
+当前模块组装入口在 [modular_pipeline.py](../modular_pipeline.py)。
 
 ## Final Layout
 

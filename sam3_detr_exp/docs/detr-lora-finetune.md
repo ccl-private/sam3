@@ -2,7 +2,7 @@
 
 ## Environment Baseline
 
-本实验目录当前以仓库根目录的 [requirements.txt](/slow_disk/ccl/codes/sam3/requirements.txt) 作为实际依赖基线。
+本实验目录当前以仓库根目录的 [requirements.txt](../../requirements.txt) 作为实际依赖基线。
 
 说明：
 
@@ -139,7 +139,7 @@ class_id x1 y1 x2 y2 x3 y3 ...
 - `transformer_encoder.pt`
 - `transformer_decoder.pt`
 
-也就是 [modular_pipeline.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/modular_pipeline.py) 里：
+也就是 [modular_pipeline.py](../modular_pipeline.py) 里：
 
 - `detector.transformer.encoder`
 - `detector.transformer.decoder`
@@ -195,7 +195,7 @@ class_id x1 y1 x2 y2 x3 y3 ...
 
 `图像 + 文本提示` 或 `图像 + 框提示` -> `DETR boxes / scores / masks`
 
-也就是说，优先围绕 [run_detr_prompt_inference.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/run_detr_prompt_inference.py) 这条 detector-only 链路做训练，不要一开始就接视频 tracker。
+也就是说，优先围绕 [run_detr_prompt_inference.py](../run_detr_prompt_inference.py) 这条 detector-only 链路做训练，不要一开始就接视频 tracker。
 
 推荐分成两种任务：
 
@@ -378,7 +378,7 @@ sample = {
 
 ### 1. 模型构建
 
-基于 [modular_pipeline.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/modular_pipeline.py) 的 `build_detector_model()`：
+基于 [modular_pipeline.py](../modular_pipeline.py) 的 `build_detector_model()`：
 
 - 先加载模块化 detector
 - 冻结默认不训练的参数
@@ -517,7 +517,7 @@ LoRA 和蒸馏是能叠加的。
 
 建议按这个顺序推进：
 
-1. 先用 [train_detr_lora.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/train_detr_lora.py) 跑通 Lightning `dry-run`
+1. 先用 [train_detr_lora.py](../train_detr_lora.py) 跑通 Lightning `dry-run`
 2. 基于 `build_detector_model()` 构建 detector-only 训练模型
 3. 冻结除 `transformer.encoder/decoder` 之外的参数
 4. 给目标线性层挂 LoRA
@@ -542,7 +542,7 @@ LoRA 和蒸馏是能叠加的。
 
 现在目录里已经补了一个最小可行训练入口：
 
-- [train_detr_lora.py](/slow_disk/ccl/codes/sam3/sam3_detr_exp/train_detr_lora.py)
+- [train_detr_lora.py](../train_detr_lora.py)
 
 这份脚本当前定位不是“正式大规模训练框架”，而是先把下面这条链打通：
 
